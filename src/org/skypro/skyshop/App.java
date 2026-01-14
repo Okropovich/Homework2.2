@@ -1,10 +1,13 @@
 package org.skypro.skyshop;
 
+import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.Searchable;
 
 public class App {
     public static void main(String[] args) {
@@ -44,8 +47,19 @@ public class App {
         boolean foundInEmpty = myBasket.checkProductByName("Apple");
         System.out.println("Найден ли товар [Apple] в пустой корзине? " + foundInEmpty);
 
+        SearchEngine searchEngine = new SearchEngine(10);
+        searchEngine.add(new Article("Польза молока", "Молоко полезно для костей..."));
+        searchEngine.add(new Article("Как выбирать сыр", "Сыр Маасдам должен иметь дырки..."));
+
+        System.out.println("Результаты поиска для 'Маасдам':");
+        Searchable[] results= searchEngine.search("Маасдам");
 
 
+        for(Searchable element:results){
+            if(element!=null){
+                System.out.println(element.getStringRepresentation());
+            }
+        }
 
     }
 }
