@@ -4,6 +4,8 @@ import org.skypro.skyshop.search.Searchable;
 
 public abstract class Product implements Searchable {
     public Product(String productName) {
+        if (productName == null || productName.isBlank())
+            throw new IllegalArgumentException("Название продукта не может быть пустым или null");
         this.productName = productName;
     }
 

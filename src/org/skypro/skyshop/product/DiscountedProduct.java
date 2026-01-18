@@ -8,9 +8,12 @@ public class DiscountedProduct extends Product {
         super(productName);
 
         this.basePrice = basePrice;
-
+        if (basePrice <= 0)
+            throw new IllegalArgumentException("ошибка");
 
         this.discount = discount;
+        if (discount < 0 || discount > 100)
+            throw new IllegalArgumentException("ошибка");
     }
 
     @Override
@@ -25,6 +28,6 @@ public class DiscountedProduct extends Product {
     }
 
     public String toString() {
-        return getCastProduct() + " : " + getCastProduct();
+        return getCastProduct() + " : " + getProductName();
     }
 }

@@ -2,6 +2,7 @@ package org.skypro.skyshop;
 
 import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.exceptions.BestResultNotFoundException;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
@@ -54,12 +55,37 @@ public class App {
         System.out.println("Результаты поиска для 'Маасдам':");
         Searchable[] results= searchEngine.search("Маасдам");
 
+        try {
+            Product sol = new SimpleProduct("Sol", -1);
+            System.out.println(sol);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Не удалось создать товар: " + e.getMessage());
+        }
+
+
+
 
         for(Searchable element:results){
             if(element!=null){
                 System.out.println(element.getStringRepresentation());
             }
         }
+        System.out.println("\n--- 8. Тестирование умного поиска ---");
 
+
+        try {
+            Searchable best = searchEngine.findBestMatch("Сыр");
+            System.out.println("Самый подходящий результат: " + best.getStringRepresentation());
+        } catch (BestResultNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        try {
+            Searchable missing = searchEngine.findBestMatch("Космолет");
+            System.out.println(missing.getStringRepresentation());
+        } catch (BestResultNotFoundException e) {
+            System.out.println("Поймали исключение: " + e.getMessage());
+        }
     }
 }
