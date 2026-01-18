@@ -6,14 +6,14 @@ public class DiscountedProduct extends Product {
 
     public DiscountedProduct(String productName, int basePrice, int discount) {
         super(productName);
-
+        if (basePrice <= 0) {
+            throw new IllegalArgumentException("Базовая цена должна быть больше 0. Передано: " + basePrice);
+        }
+        if (discount < 0 || discount > 100) {
+            throw new IllegalArgumentException("Скидка должна быть в диапазоне от 0 до 100. Передано: " + discount);
+        }
         this.basePrice = basePrice;
-        if (basePrice <= 0)
-            throw new IllegalArgumentException("ошибка");
-
         this.discount = discount;
-        if (discount < 0 || discount > 100)
-            throw new IllegalArgumentException("ошибка");
     }
 
     @Override
