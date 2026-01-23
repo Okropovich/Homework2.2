@@ -1,23 +1,26 @@
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 
 public class ProductBasket {
-    private final List<Product> products = new LinkedList<>();
+
+    private final Map<String, List<Product>> products = new HashMap<>();
 
     public void addProduct(Product product) {
-        this.products.add(product);
+
+        products.computeIfAbsent(product.getProductName(), k -> new ArrayList<>()).add(product);
     }
 
     public int getTotalCost() {
-        int totalCost = 0;
-        for (Product item : products) {
-            totalCost += item.getCastProduct();
+        int total = 0;
+
+        for (List<Product> productList : products.values()) {
+            for (Product product : productList) {
+                total += product.getCastProduct();
+            }
         }
-        return totalCost;
+        return total;
     }
 
     public void printContent() {
@@ -25,27 +28,22 @@ public class ProductBasket {
             System.out.println("в корзине пусто");
             return;
         }
-
         int specialCount = 0;
         System.out.println("--- Список товаров ---");
-        for (Product item : products) {
-            System.out.println(item.toString());
-            if (item.isSpecial()) {
-                specialCount++;
+        // Двойной цикл: по мапе и по вложенным спискам
+        for (List<Product> productList : products.values()) {
+            for (Product product : productList) {
+                System.out.println(product);
+                if (product.isSpecial()) specialCount++;
             }
         }
-        System.out.println("Итого: " + this.getTotalCost());
+        System.out.println("Итого: " + getTotalCost());
         System.out.println("Специальных товаров: " + specialCount);
     }
 
     public boolean checkProductByName(String name) {
 
-        for (Product item : products) {
-            if (item.getProductName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-        return false;
+        return products.containsKey(name);
     }
 
     public void clearBasket() {
@@ -53,18 +51,10 @@ public class ProductBasket {
         System.out.println("Корзина очищена.");
     }
 
-    // Тот самый новый метод удаления!
     public List<Product> removeProductByName(String name) {
-        List<Product> removed = new LinkedList<>();
-        Iterator<Product> iterator = products.iterator();
 
-        while (iterator.hasNext()) {
-            Product current = iterator.next();
-            if (current.getProductName().equalsIgnoreCase(name)) {
-                removed.add(current);
-                iterator.remove();
-            }
-        }
-        return removed;
+        List<Product> removed = products.remove(name);
+
+        return (removed != null) ? removed : new ArrayList<>();
     }
 }
