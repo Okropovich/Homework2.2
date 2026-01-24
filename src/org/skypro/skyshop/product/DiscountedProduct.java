@@ -6,20 +6,13 @@ public class DiscountedProduct extends Product {
 
     public DiscountedProduct(String productName, int basePrice, int discount) {
         super(productName);
-        if (basePrice <= 0) {
-            throw new IllegalArgumentException("Базовая цена должна быть больше 0. Передано: " + basePrice);
-        }
-        if (discount < 0 || discount > 100) {
-            throw new IllegalArgumentException("Скидка должна быть в диапазоне от 0 до 100. Передано: " + discount);
-        }
         this.basePrice = basePrice;
         this.discount = discount;
     }
 
     @Override
     public int getCastProduct() {
-        int discountAmount = (basePrice * discount) / 100;
-        return basePrice - discountAmount;
+        return basePrice - (basePrice * discount / 100);
     }
 
     @Override
@@ -27,7 +20,8 @@ public class DiscountedProduct extends Product {
         return true;
     }
 
+    @Override
     public String toString() {
-        return getCastProduct() + " : " + getProductName();
+        return getProductName() + ": " + getCastProduct() + " (скидка " + discount + "%)";
     }
 }

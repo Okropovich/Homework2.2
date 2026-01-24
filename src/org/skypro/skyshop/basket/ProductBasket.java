@@ -4,23 +4,10 @@ import org.skypro.skyshop.product.Product;
 import java.util.*;
 
 public class ProductBasket {
-
     private final Map<String, List<Product>> products = new HashMap<>();
 
     public void addProduct(Product product) {
-
         products.computeIfAbsent(product.getProductName(), k -> new ArrayList<>()).add(product);
-    }
-
-    public int getTotalCost() {
-        int total = 0;
-
-        for (List<Product> productList : products.values()) {
-            for (Product product : productList) {
-                total += product.getCastProduct();
-            }
-        }
-        return total;
     }
 
     public void printContent() {
@@ -29,32 +16,28 @@ public class ProductBasket {
             return;
         }
         int specialCount = 0;
-        System.out.println("--- Список товаров ---");
-        // Двойной цикл: по мапе и по вложенным спискам
-        for (List<Product> productList : products.values()) {
-            for (Product product : productList) {
-                System.out.println(product);
-                if (product.isSpecial()) specialCount++;
+        for (List<Product> list : products.values()) {
+            for (Product p : list) {
+                System.out.println(p);
+                if (p.isSpecial()) specialCount++;
             }
         }
         System.out.println("Итого: " + getTotalCost());
         System.out.println("Специальных товаров: " + specialCount);
     }
 
-    public boolean checkProductByName(String name) {
-
-        return products.containsKey(name);
-    }
-
-    public void clearBasket() {
-        products.clear();
-        System.out.println("Корзина очищена.");
+    private int getTotalCost() {
+        int total = 0;
+        for (List<Product> list : products.values()) {
+            for (Product p : list) {
+                total += p.getCastProduct();
+            }
+        }
+        return total;
     }
 
     public List<Product> removeProductByName(String name) {
-
         List<Product> removed = products.remove(name);
-
         return (removed != null) ? removed : new ArrayList<>();
     }
 }

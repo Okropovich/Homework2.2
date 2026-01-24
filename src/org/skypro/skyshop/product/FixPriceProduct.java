@@ -9,7 +9,7 @@ public class FixPriceProduct extends Product {
 
     @Override
     public int getCastProduct() {
-        return this.FIX_PRICE;
+        return FIX_PRICE;
     }
 
     @Override
@@ -17,7 +17,8 @@ public class FixPriceProduct extends Product {
         return true;
     }
 
+    @Override
     public String toString() {
-        return getProductName() + ": Фиксированная цена " + FIX_PRICE;
+        return getProductName() + ": фиксированная цена " + FIX_PRICE;
     }
 }
