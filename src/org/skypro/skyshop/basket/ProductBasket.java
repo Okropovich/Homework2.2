@@ -2,6 +2,7 @@ package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductBasket {
     private final Map<String, List<Product>> products = new HashMap<>();
@@ -10,30 +11,35 @@ public class ProductBasket {
         products.computeIfAbsent(product.getProductName(), k -> new ArrayList<>()).add(product);
     }
 
+    public int getTotalCost() {
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .mapToInt(Product::getCastProduct)
+                .sum();
+    }
+
+
     public void printContent() {
         if (products.isEmpty()) {
             System.out.println("в корзине пусто");
             return;
         }
-        int specialCount = 0;
-        for (List<Product> list : products.values()) {
-            for (Product p : list) {
-                System.out.println(p);
-                if (p.isSpecial()) specialCount++;
-            }
-        }
+
+
+        products.values().stream()
+                .flatMap(Collection::stream)
+                .forEach(System.out::println);
+
         System.out.println("Итого: " + getTotalCost());
-        System.out.println("Специальных товаров: " + specialCount);
+        System.out.println("Специальных товаров: " + getSpecialCount());
     }
 
-    private int getTotalCost() {
-        int total = 0;
-        for (List<Product> list : products.values()) {
-            for (Product p : list) {
-                total += p.getCastProduct();
-            }
-        }
-        return total;
+
+    private long getSpecialCount() {
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     public List<Product> removeProductByName(String name) {
